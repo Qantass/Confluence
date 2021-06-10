@@ -2,7 +2,8 @@
 ---
 
 - name: install confluence
-  hosts: all
+ # hosts: all
+  hosts: instances
   become: yes
 
   tasks:
@@ -11,8 +12,19 @@
     shell: sudo apt install -y default-jre
     shell: sudo echo "export JAVA_HOME=/usr" >> .bashrc
     shell: sudo echo "export PATH=$JAVA_HOME/bin:$PATH" >> .bashrc
+    shell: sudo mkdir /home/ubuntu/confluence
+
+  - name: create home folder and giving rights
+    shell: sudo chmod -R confluence /home/ubuntu/confluence
+    shell: sudo chmod -R u=rwx,go-rwx /home/ubuntu/confluence
+
+    shell: sudo mkdir /home/ubuntu/confluence-home
+    shell: sudo chmod -R confluence /home/ubuntu/confluence-home
+    shell: sudo chmod -R u=rwx,go-rwx /home/ubuntu/confluence-home
+
 
   - name: Creating user for Confluence
+   
     shell: sudo /usr/sbin/useradd --create-home --comment "Account for running Confluence" --shell /bin/bash confluence  
 
   - name: Installing DB (PostgreSQL)
@@ -23,21 +35,15 @@
 
    
   - name: Download
-    shell: sudo mkdir /home/ubuntu/confluence
+    
     shell: wget https://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-7.12.2.tar.gz /home/ubuntu/confluence
 
   - name: Unzip   
-    shell: sudo tar -xzf /home/ubuntu/confluence/atlassian-confluence-7.12.2.tar.gz -C /home/ubuntu/confluence
+    shell: sudo tar -xzf /home/ubuntu/atlassian-confluence-7.12.2.tar.gz -C /home/ubuntu/confluence
     shell: sudo tar -xf /home/ubuntu/confluence/atlassian-confluence-7.12.2.tar
 
-  - name: create home folder and giving rights
-    shell: sudo chmod -R confluence /home/ubuntu/confluence
-    shell: sudo chmod -R u=rwx,go-rwx /home/ubuntu/confluence
-    shell: sudo mkdir /home/ubuntu/confluence-home
-    shell: sudo chmod -R confluence /home/ubuntu/confluence-home
-    shell: sudo chmod -R u=rwx,go-rwx /home/ubuntu/confluence-home
-
-  - name: editing config file
-    shell: sudo    
-  - name: 
+ # - name: editing
+   # shell: sudo echo "confluence.home=/var/confluence-home" >> /home/ubuntu/confluence/confluence.init.properties   
+ # - name: 
     
+...
